@@ -1,0 +1,12 @@
+[client]
+default-character-set=utf8mb4
+
+[mysql]
+default-character-set=utf8mb4
+
+[mysqld]
+default-time-zone='Asia/Seoul'
+default_authentication_plugin=mysql_native_password
+collation-server = utf8mb4_unicode_ci
+init-connect='SET NAMES utf8mb4'
+character-set-server = utf8mb4

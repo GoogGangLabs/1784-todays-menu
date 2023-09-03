@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  database:
+    container_name: database
+    image: mysql:8.1
+    expose:
+      - 3306
+    env_file:
+      - ./env/.env
+    networks:
+      meal-network:
+        ipv4_address: 172.20.0.2
+    volumes:
+      - ./database/config/init.cnf:/etc/mysql/conf.d/init.cnf
+      - ./database/config/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/dist:/var/lib/mysql
+    restart: always
+
+  server:
+    container_name: server
+    build:
+      context: .
+    image: meal-server:1.0
+    expose:
+      - 3000
+    env_file:
+      - ./env/.env
+    networks:
+      meal-network:
+        ipv4_address: 172.20.0.3
+    depends_on:
+      - database
+    restart: always
+
+networks:
+  meal-network:
+    name: meal-network
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
